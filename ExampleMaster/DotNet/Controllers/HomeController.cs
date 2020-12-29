@@ -15,14 +15,16 @@ namespace DotNet.Controllers
         }
 
         [HttpPost]
-        public void StartTask()
+        public void StartTask(string userid)
         {
             AppConstants.TokenSource = new CancellationTokenSource();
             for (int i = 0; i < 20; i++)
             {
                 if (!AppConstants.TokenSource.Token.IsCancellationRequested)
                 {
-                    TaskHub.TaskUpdate($"Loop:{i}");
+                    TaskHub.TaskUpdate($"All Loop:{i}");
+                    TaskHub.TaskUpdateUserId($"Loop:{i}", userid);
+
                     Thread.Sleep(2000);
                 }
                 else

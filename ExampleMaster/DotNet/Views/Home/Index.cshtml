@@ -3,6 +3,9 @@
 }
 
 <br />
+<input type="text" id="userid" value="123" />
+<input type="button" value="Start" class="btn btn-primary" onclick="initAnnounce()"  />
+<br/>
 <input type="button" value="Start Task" class="btn btn-primary" id="start-task" />
 <input type="button" value="Stop Task" class="btn btn-primary" id="stop-task" />
 <br />
@@ -21,14 +24,11 @@
                     + '</strong></li>');
             };
 
-            // Start the connection.
-            $.connection.hub.start().done(function () {
-                console.log('Hub Started');
-            });
+            let userid = document.getElementById('userid').value;
 
             $("#start-task").on("click", function () {
                 $.ajax({
-                    url: 'Home/StartTask',
+                    url: '/Home/StartTask?userid='  + document.getElementById('userid').value,
                     type: 'POST',
                     dataType: 'json',
                     success: function (data) {
@@ -39,7 +39,7 @@
 
             $("#stop-task").on("click", function () {
                 $.ajax({
-                    url: 'Home/StopTask',
+                    url: '/Home/StopTask',
                     type: 'POST',
                     dataType: 'json',
                     success: function (data) {
@@ -53,5 +53,19 @@
                 return encodedValue;
             }
         });
+
+
+        function initAnnounce() {
+            let userid = document.getElementById('userid').value;
+
+            // Start the connection.
+            $.connection.hub.start()
+                .done(function () {
+
+                    $.connection.TaskHub.server.announce(userid);
+                    console.log('Hub Started');
+                })
+                .fail(function () { alert("Hub failed to start.") });
+        }
     </script>
 }
